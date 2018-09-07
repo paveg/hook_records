@@ -27,8 +27,10 @@ gem 'bootsnap', '>= 1.1.0', require: false
 group :development, :test, :ci do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'codecov', require: false
+  gem 'factory_bot_rails'
   gem 'pry-byebug'
   gem 'rspec'
+  gem 'rspec-rails'
   gem 'rubocop', require: false
   gem 'simplecov', require: false
 end
@@ -36,6 +38,8 @@ end
 group :development do
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'spring'
+  gem 'spring-commands-rspec'
+  gem 'spring-commands-rubocop'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'web-console', '>= 3.3.0'
 end
