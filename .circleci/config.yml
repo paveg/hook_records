@@ -112,10 +112,10 @@ workflows:
   version: 2
   integration:
     jobs:
-    - prepare
-    - rspec:
-        requires:
-        - prepare
-    - rubocop:
-        requires:
-        - prepare
+      - prepare
+      - rspec:
+          requires:
+             - prepare
+      - rubocop:
+          requires:
+              - prepare
