@@ -2,7 +2,8 @@ hook records
 ===
 
 * Requirements Ruby version
-- 2.6 or higher
+
+- 2.5.1
 
 * Configuration
 
