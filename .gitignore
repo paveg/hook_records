@@ -49,3 +49,5 @@ bower.json
 # Ignore node_modules
 node_modules/
 
+# for Intellij / JebBrains tools
+.idea/
