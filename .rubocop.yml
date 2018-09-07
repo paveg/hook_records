@@ -1,0 +1,31 @@
+inherit_from: .rubocop_todo.yml
+Rails:
+  Enabled: true
+
+AllCops:
+  DisplayCopNames: true
+  Exclude:
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'script/**/*'
+    - 'tmp/**/*'
+    - 'vendor/**/*'
+    - 'node_modules/**/*'
+    - !ruby/regexp /old_and_unused\.rb$/
+
+Style/MixinUsage:
+  Exclude:
+    - 'bin/**/*'
+
+Bundler/OrderedGems:
+  Enabled: true
+
+Style/Documentation:
+  Enabled: false
+
+
+Style/SafeNavigation:
+  Enabled: true
+
+Metrics/LineLength:
+  Max: 120
