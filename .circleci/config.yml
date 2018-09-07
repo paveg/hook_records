@@ -48,6 +48,19 @@ jobs:
   rspec:
     <<: *defaults
     parallelism: 1
+    docker:
+    - image: circleci/ruby:2.5.1-node-browsers
+      environment:
+        RAILS_ENV: test
+    - image: circleci/mysql:8.0-ram
+      command: |
+        mysqld --innodb-file-format=Baracuda --innodb_file_per_table=true --innodb-large-prefix=true
+      environment:
+        TZ:  "/usr/share/zoneinfo/Asia/Tokyo"
+        MYSQL_USER: mysql
+        MYSQL_PASSWORD: root
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: hook_records_test
     steps:
       - attach_workspace:
         at: ~/
@@ -85,6 +98,10 @@ jobs:
   rubocop:
     <<: *defaults
     parallelism: 1
+    docker:
+    - image: circleci/ruby:2.5.1-node-browsers
+      environment:
+        RAILS_ENV: test
     steps:
       - attach_workspace:
           at: ~/
