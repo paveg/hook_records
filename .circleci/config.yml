@@ -10,9 +10,9 @@ jobs:
         - image: circleci/ruby:2.5.1-node-browsers
           environment:
             RAILS_ENV: test
-        - image: circleci/mysql:8.0-ram
+        - image: circleci/mysql:5.7-ram
           command: |
-            mysqld --innodb_file_per_table=true
+            mysqld --innodb-file-format=Barracuda --innodb_file_per_table=true --innodb-large-prefix=true
           environment:
             TZ:  "/usr/share/zoneinfo/Asia/Tokyo"
             MYSQL_USER: mysql
