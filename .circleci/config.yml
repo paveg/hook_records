@@ -1,0 +1,121 @@
+defaults: &defaults
+  working_directory: ~/repo
+
+version: 2
+jobs:
+  prepare:
+    <<: *defaults
+    parallelism: 1
+    docker:
+        - image: circleci/ruby:2.5.1-node-browsers
+          environment:
+            RAILS_ENV: test
+        - image: circleci/mysql:8.0-ram
+          command: |
+            mysqld --innodb-file-format=Baracuda --innodb_file_per_table=true --innodb-large-prefix=true
+          environment:
+            TZ:  "/usr/share/zoneinfo/Asia/Tokyo"
+            MYSQL_USER: mysql
+            MYSQL_PASSWORD: root
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: hook_records_test
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+         keys:
+          - v1-dependencies-{{ checksum "Gemfile.lock" }}
+          - v1-dependencies- # fallback to using the latest cache if no exact match is found
+
+      - run:
+          name: install dependencies
+          command: |
+            bundle check || bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+
+      # Database setup
+      - run: bundle exec rake db:create
+      - run: bundle exec rake db:schema:load
+
+      - persist_to_workspace:
+          root: ~/
+
+  rspec:
+    <<: *defaults
+    parallelism: 1
+    steps:
+      - attach_workspace:
+        at: ~/
+
+      - run:
+          name: check dependencies
+          command: |
+            bundle check || bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      # run tests!
+      - run:
+          name: run tests
+          command: |
+            mkdir /tmp/test-results
+            TEST_FILES="$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)"
+
+            bundle exec rspec --format progress \
+                            --format RspecJunitFormatter \
+                            --out /tmp/test-results/rspec.xml \
+                            --format progress \
+                            $TEST_FILES
+      - run:
+          name: upload code coverage
+          when: on_success
+          command: |
+            bash <(curl -fs https://codecov.io/bash) -t $CODECOV_TOKEN
+
+      # collect reports
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+
+  rubocop:
+    <<: *defaults
+    parallelism: 1
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: check dependencies
+          command: |
+            bundle check || bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - run:
+          name: run rubocop
+          command: |
+            mkdir /tmp/test-results
+            bundle exec rubocop --display-cop-names \
+                              --extra-details \
+                              --display-style-guide \
+                              --parallel \
+                              --out /tmp/test-results/rubocop.xml
+      # collect reports
+      - store_test_results:
+          path: /tmp/test-results
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test-results
+
+workflows:
+  version: 2
+  integration:
+    jobs:
+    - prepare
+    - rspec:
+        requires:
+        - prepare
+    - rubocop:
+        requires:
+        - prepare
