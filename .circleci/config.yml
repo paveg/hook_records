@@ -68,7 +68,7 @@ jobs:
           TZ:  "/usr/share/zoneinfo/Asia/Tokyo"
       - image: circleci/mysql:5.7-ram
         command: |
-          mysqld --innodb-file-format=Baracuda --innodb_file_per_table=true --innodb-large-prefix=true
+          mysqld --innodb-file-format=Barracuda --innodb_file_per_table=true --innodb-large-prefix=true
         environment:
           TZ:  "/usr/share/zoneinfo/Asia/Tokyo"
           MYSQL_USER: mysql
