@@ -30,8 +30,8 @@ group :development, :test, :ci do
   gem 'factory_bot_rails'
   gem 'pry-byebug'
   gem 'rspec'
-  gem 'rspec_junit_formatter', require: false
   gem 'rspec-rails'
+  gem 'rspec_junit_formatter', require: false
   gem 'rubocop', require: false
   gem 'simplecov', require: false
 end
