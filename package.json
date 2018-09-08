@@ -2,14 +2,17 @@
   "name": "hook_records",
   "private": true,
   "dependencies": {
-    "@rails/webpacker": "3.5",
+    "@rails/webpacker": "4.0.0-pre.2",
     "babel-preset-react": "^6.24.1",
     "prop-types": "^15.6.2",
     "rails-ujs": "^5.2.1",
     "react": "^16.5.0",
-    "react-dom": "^16.5.0"
+    "react-dom": "^16.5.0",
+    "webpack": "^4.17.2"
   },
   "devDependencies": {
-    "webpack-dev-server": "2.11.2"
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.8"
   }
 }
