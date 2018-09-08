@@ -10,6 +10,10 @@ jobs:
         - image: circleci/ruby:2.5.1-node-browsers
           environment:
             RAILS_ENV: test
+            LANG: ja_JP.UTF-8
+            LC_ALL: C.UTF-8
+            LANGUAGE: ja_JP.UTF-8
+            TZ:  "/usr/share/zoneinfo/Asia/Tokyo"
         - image: circleci/mysql:5.7-ram
           command: |
             mysqld --innodb-file-format=Barracuda --innodb_file_per_table=true --innodb-large-prefix=true
@@ -24,9 +28,9 @@ jobs:
 
       # Download and cache dependencies
       - restore_cache:
-         keys:
-          - v1-dependencies-{{ checksum "Gemfile.lock" }}
-          - v1-dependencies- # fallback to using the latest cache if no exact match is found
+          keys:
+            - v1-dependencies-{{ checksum "Gemfile.lock" }}
+            - v1-dependencies- # fallback to using the latest cache if no exact match is found
 
       - run:
           name: install dependencies
@@ -37,39 +41,53 @@ jobs:
           paths:
             - ./vendor/bundle
           key: v1-dependencies-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: wait for Database
+          command: |
+            dockerize -wait tcp://localhost:3306 -timeout 1m
 
       # Database setup
       - run: bundle exec rake db:create
       - run: bundle exec rake db:schema:load
 
       - persist_to_workspace:
-          root: ~/
+            root: ~/
+            paths:
+              - repo
 
   rspec:
     <<: *defaults
     parallelism: 1
     docker:
-    - image: circleci/ruby:2.5.1-node-browsers
-      environment:
-        RAILS_ENV: test
-    - image: circleci/mysql:8.0-ram
-      command: |
-        mysqld --innodb-file-format=Baracuda --innodb_file_per_table=true --innodb-large-prefix=true
-      environment:
-        TZ:  "/usr/share/zoneinfo/Asia/Tokyo"
-        MYSQL_USER: mysql
-        MYSQL_PASSWORD: root
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: hook_records_test
+      - image: circleci/ruby:2.5.1-node-browsers
+        environment:
+          RAILS_ENV: test
+          LANG: ja_JP.UTF-8
+          LC_ALL: C.UTF-8
+          LANGUAGE: ja_JP.UTF-8
+          TZ:  "/usr/share/zoneinfo/Asia/Tokyo"
+      - image: circleci/mysql:5.7-ram
+        command: |
+          mysqld --innodb-file-format=Baracuda --innodb_file_per_table=true --innodb-large-prefix=true
+        environment:
+          TZ:  "/usr/share/zoneinfo/Asia/Tokyo"
+          MYSQL_USER: mysql
+          MYSQL_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: hook_records_test
     steps:
       - attach_workspace:
-        at: ~/
+          at: ~/
 
       - run:
           name: check dependencies
           command: |
             bundle check || bundle install --jobs=4 --retry=3 --path vendor/bundle
 
+      - run:
+          name: wait for Database
+          command: |
+            dockerize -wait tcp://localhost:3306 -timeout 1m
       # run tests!
       - run:
           name: run tests
@@ -99,9 +117,13 @@ jobs:
     <<: *defaults
     parallelism: 1
     docker:
-    - image: circleci/ruby:2.5.1-node-browsers
-      environment:
-        RAILS_ENV: test
+      - image: circleci/ruby:2.5.1-node-browsers
+        environment:
+          RAILS_ENV: test
+          LANG: ja_JP.UTF-8
+          LC_ALL: C.UTF-8
+          LANGUAGE: ja_JP.UTF-8
+          TZ:  "/usr/share/zoneinfo/Asia/Tokyo"
     steps:
       - attach_workspace:
           at: ~/
@@ -132,7 +154,7 @@ workflows:
       - prepare
       - rspec:
           requires:
-             - prepare
+              - prepare
       - rubocop:
           requires:
               - prepare
