@@ -8,11 +8,13 @@ ruby '2.5.1'
 gem 'devise', '~> 4.5'
 gem 'jbuilder', '~> 2.5'
 gem 'mysql2', '>= 0.4.4', '< 0.6.0'
+gem 'omniauth', '~> 1.8'
 gem 'omniauth-facebook', '~> 5.0'
 gem 'omniauth-twitter', '~> 1.4'
 gem 'puma', '~> 3.11'
 gem 'rails', '~> 5.2.1'
 gem 'webpacker'
+gem 'yard'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password

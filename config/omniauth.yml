@@ -1,0 +1,26 @@
+production: &production
+  facebook:
+    key: xxxxx
+    secret: xxxxx
+  twitter:
+    key: xxxxx
+    secret: xxxxx
+  google:
+    key: xxxxx
+    secret: xxxxx
+
+development: &development
+  facebook:
+    key: <%= ENV.fetch('FACEBOOK_KEY') %>
+    secret: <%= ENV.fetch('FACEBOOK_SECRET') %>
+  twitter:
+    key: <%= ENV.fetch('TWITTER_KEY') %>
+    secret: <%= ENV.fetch('TWITTER_SECRET') %>
+
+test: &test
+  facebook:
+    key: <%= ENV.fetch('FACEBOOK_KEY_TEST') {} %>
+    secret: <%= ENV.fetch('FACEBOOK_SECRET_TEST') {} %>
+  twitter:
+    key: <%= ENV.fetch('TWITTER_KEY_TESt') {} %>
+    secret: <%= ENV.fetch('TWITTER_SECRET_TEST') {} %>
