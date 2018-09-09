@@ -11,11 +11,11 @@ production: &production
 
 development: &development
   facebook:
-    key: <%= ENV.fetch('FACEBOOK_KEY') %>
-    secret: <%= ENV.fetch('FACEBOOK_SECRET') %>
+    key: <%= ENV.fetch('FACEBOOK_KEY') {} %>
+    secret: <%= ENV.fetch('FACEBOOK_SECRET') {} %>
   twitter:
-    key: <%= ENV.fetch('TWITTER_KEY') %>
-    secret: <%= ENV.fetch('TWITTER_SECRET') %>
+    key: <%= ENV.fetch('TWITTER_KEY') {} %>
+    secret: <%= ENV.fetch('TWITTER_SECRET') {} %>
 
 test: &test
   facebook:
