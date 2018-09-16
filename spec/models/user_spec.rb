@@ -5,7 +5,9 @@ require 'rails_helper'
 describe User, type: :model do
   let(:user) { build :user }
   let(:invalid_user) { User.new }
-  let(:facebook_auth) { OmniAuth::AuthHash.new(JSON.load(File.read(Rails.root.join('spec/fixtures/facebook_auth.json')))) }
+  let(:facebook_auth) do
+    OmniAuth::AuthHash.new(JSON.parse(File.read(Rails.root.join('spec', 'fixtures', 'facebook_auth.json'))))
+  end
   context 'when invalid' do
     it { expect(invalid_user).to be_invalid }
   end
@@ -13,9 +15,9 @@ describe User, type: :model do
     it do
       # User model needs email and password.
       expect(user).to have_attributes(
-                        email: 'test@example.com',
-                        password: 'testtest'
-                      )
+        email: 'test@example.com',
+        password: 'testtest'
+      )
       expect(user).to be_valid
       # execute User#save is create new record.
       expect { user.save }.to change { User.count }.by(1)
@@ -29,7 +31,7 @@ describe User, type: :model do
 
     context 'when access new user' do
       it do
-        expect { subject }.to change { User.count }.by(1)
+        expect { subject }.to change { User.count }.from(0).to(1)
         is_expected.to be_kind_of(described_class)
         expect(subject).to have_attributes(email: 'test@example.com')
         expect(subject.social_profiles.count).to eq(1)
@@ -46,6 +48,5 @@ describe User, type: :model do
         expect(subject.social_profiles).to be_present
       end
     end
-    context ''
   end
 end

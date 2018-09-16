@@ -5,7 +5,7 @@ class SocialProfile < ApplicationRecord
   belongs_to :user
   store :others
 
-  validates_presence_of :user_id, :uid, :provider
+  validates :user_id, :uid, :provider, presence: true
   validates :uid, uniqueness: { scope: :provider }
 
   def self.find_or_create_by_auth!(auth, user)

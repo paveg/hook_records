@@ -106,5 +106,6 @@ RSpec.configure do |config|
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
   config.before(:suite) { DatabaseCleaner.strategy = :deletion }
-  config.before(:each){ |_example| DatabaseCleaner.clean }
+  config.before(:each) { DatabaseCleaner.start }
+  config.after(:each) { DatabaseCleaner.clean }
 end
