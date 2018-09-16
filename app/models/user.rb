@@ -11,6 +11,20 @@ class User < ApplicationRecord
   TEMPORARY_EMAIL_REGEXP = /\Achange@me/
   validates :email, presence: true, email: true
 
+  def self.find_or_create_for_oauth!(auth)
+    user = nil
+    ApplicationRecord.transaction do
+      # Auto insert secure password for skip validation.
+      if (user = User.find_by(email: auth.info.email)).nil?
+        user = User.new(email: auth.info.email) # only facebook
+        user.password = SecureRandom.base64(15)
+        user.save!
+      end
+      SocialProfile.find_or_create_by_auth!(auth, user)
+    end
+    user
+  end
+
   # @param [String / Symbol] provider
   def social_profile(provider)
     social_profiles.find { |sp| sp.provider == provider.to_s }
@@ -23,15 +37,5 @@ class User < ApplicationRecord
   # Check user email again.
   def reset_confirmation!
     update(confirmed_at: nil)
-  end
-
-  # Set current user in Thread.
-  def self.current_user=(user)
-    Thread.current[:current_user] = user
-  end
-
-  # Get current user from Thread.
-  def self.current_user
-    Thread.current[:current_user]
   end
 end

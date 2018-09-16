@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class UsersController
-  before_action :authenticate_user!, except: finish_sign_up
+class UsersController < ApplicationController
+  before_action :authenticate_user!, except: [:finish_sign_up]
 
   def finish_sign_up
     @user = User.find(params[:id])

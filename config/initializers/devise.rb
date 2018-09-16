@@ -87,5 +87,5 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
   oauth_config = YAML.load(ERB.new(File.read("#{Rails.root}/config/omniauth.yml")).result)[Rails.env].deep_symbolize_keys
   config.omniauth :facebook, oauth_config[:facebook][:key], oauth_config[:facebook][:secret]
-  config.omniauth :twitter, oauth_config[:twitter][:key], oauth_config[:twitter][:secret]
+  # config.omniauth :twitter, oauth_config[:twitter][:key], oauth_config[:twitter][:secret]
 end

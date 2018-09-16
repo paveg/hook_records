@@ -28,12 +28,14 @@ gem 'yard'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
-
+gem 'thin'
+gem 'react-rails'
 group :development, :test, :ci do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'codecov', require: false
   gem 'factory_bot_rails'
   gem 'pry-byebug'
+  gem 'database_cleaner'
   gem 'rspec'
   gem 'rspec-rails'
   gem 'rspec_junit_formatter', require: false

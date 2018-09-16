@@ -1,5 +1,13 @@
 <% if user_signed_in? %>
+  <div class="user-detail">
+    <ul>
+      <li>ID: <%= current_user.id %></li>
+      <li>Email: <%= current_user.email %></li>
+      <li>Last sign in at <%= current_user.last_sign_in_at %></li>
+    </ul>
+  </div>
   <%= link_to 'Logout', destroy_user_session_path, method: :delete %>
 <% else %>
   <%= link_to 'Registration', new_user_registration_path %>
+  <%= react_component('Facebook') %>
 <% end %>

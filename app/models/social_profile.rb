@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
+require_relative '../helpers/o_auth/o_auth_service'
 class SocialProfile < ApplicationRecord
   belongs_to :user
   store :others
 
+  validates_presence_of :user_id, :uid, :provider
   validates :uid, uniqueness: { scope: :provider }
 
-  def self.find_for_oauth(auth)
-    profile = find_or_create_by(uid: auth.uid, provider: auth.provider)
-    profile.save_oauth_data!(auth)
-    profile
+  def self.find_or_create_by_auth!(auth, user)
+    find_or_create_by!(uid: auth.uid, provider: auth.provider, user_id: user.id)
   end
 
   def save_oauth_data!(auth)
@@ -35,7 +35,7 @@ class SocialProfile < ApplicationRecord
 
   def policy(provider, auth)
     class_name = provider.to_s.classify
-    "OAuth::#{class_name}".constantize.new(auth)
+    "OAuthPolicy::#{class_name}".constantize.new(auth)
   end
 
   def valid_oauth?(auth)
